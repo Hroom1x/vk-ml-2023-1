@@ -4,39 +4,67 @@
 
 using namespace std;
 
-int get_name_row(ifstream &file, vector<string> &buf) {
-    if (buf.size() != 6) {
+int get_name_row(ifstream &file, vector<string> &row) {
+    if (row.size() != 6) {
         cerr << "Name row buffer must be length 6\n";
         return -1;
     }
-    string test;
-    for (auto & i : buf) {
-        if (file.eof()) {
-            cerr << "Function get_name_row reached the eof\n";
-            return -1;
+    if (file.eof()) {
+        cerr << "Function get_name_row reached the eof\n";
+        return -1;
+    }
+    string line, buf;
+    getline(file, line);
+    int count = 0;
+    for (char i : line) {
+        if (i != '\t') {
+            buf += i;
+        } else if (count<row.size()) {
+            row[count++] = buf;
+            buf.clear();
         }
-        file >> i;
+    }
+    if (!buf.empty()) {
+        row[count++] = buf;
+    }
+    if (count != row.size()) {
+        cerr << "Invalid name row\n";
+        return -1;
     }
     return 0;
 }
 
-int get_title_row(ifstream &file, vector<string> &buf) {
-    if (buf.size() != 9) {
-        cerr << "Name row buffer must be length 6\n";
+int get_title_row(ifstream &file, vector<string> &row) {
+    if (row.size() != 9) {
+        cerr << "Title row buffer must be length 9\n";
         return -1;
     }
-    string test;
-    for (auto & i : buf) {
-        if (file.eof()) {
-            cerr << "Function get_name_row reached the eof\n";
-            return -1;
+    if (file.eof()) {
+        cerr << "Function get_title_row reached the eof\n";
+        return -1;
+    }
+    string line, buf;
+    getline(file, line);
+    int count = 0;
+    for (char i : line) {
+        if (i != '\t') {
+            buf += i;
+        } else if (count<row.size()) {
+            row[count++] = buf;
+            buf.clear();
         }
-        file >> i;
+    }
+    if (!buf.empty()) {
+        row[count++] = buf;
+    }
+    if (count != row.size()) {
+        cerr << "Invalid name row\n";
+        return -1;
     }
     return 0;
 }
 
-int check_name_fields(vector<string> buf) {
+int check_name_fields(const vector<string> &buf) {
     vector<string> agent = {
             "nconst",
             "primaryName",
@@ -51,7 +79,7 @@ int check_name_fields(vector<string> buf) {
     return 0;
 }
 
-int check_title_fields(vector<string> buf) {
+int check_title_fields(const vector<string> &buf) {
     vector<string> agent = {
             "tconst",
             "titleType",
@@ -110,13 +138,15 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    vector<string> name_row(6);
+    /*vector<string> name_row(6);
     get_name_row(dirs_file, name_row);
     cout << "\nTest\n" << check_name_fields(name_row);
+    get_name_row(dirs_file, name_row);
+    get_name_row(dirs_file, name_row);
 
     vector<string> title_row(9);
     get_title_row(titles_file, title_row);
-    cout << "\nTest\n" << check_title_fields(title_row);
+    cout << "\nTest\n" << check_title_fields(title_row);*/
 
     dirs_file.close();
     titles_file.close();
