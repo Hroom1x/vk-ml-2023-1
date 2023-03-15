@@ -2,11 +2,16 @@
 #include <fstream>
 #include "vector"
 
+#define NAME_ROW_LENGTH 6
+#define TITLE_ROW_LENGTH 9
+#define ARG_NUMBER 7
+
 using namespace std;
 
+
 int get_name_row(ifstream &file, vector<string> &row) {
-    if (row.size() != 6) {
-        cerr << "Name row buffer must be length 6\n";
+    if (row.size() != NAME_ROW_LENGTH) {
+        cerr << "Name row buffer must be length " << NAME_ROW_LENGTH << endl;
         return -1;
     }
     if (file.eof()) {
@@ -35,8 +40,8 @@ int get_name_row(ifstream &file, vector<string> &row) {
 }
 
 int get_title_row(ifstream &file, vector<string> &row) {
-    if (row.size() != 9) {
-        cerr << "Title row buffer must be length 9\n";
+    if (row.size() != TITLE_ROW_LENGTH) {
+        cerr << "Title row buffer must be length " << TITLE_ROW_LENGTH << endl;
         return -1;
     }
     if (file.eof()) {
@@ -102,7 +107,7 @@ int main(int argc, char *argv[]) {
     // -d /path/to/directors.csv     path to file with directors names
     // -t /path/to/titles.csv        path to file with titles
     // -n "Directors name"           directors name to search films
-    if (argc < 7) {
+    if (argc < ARG_NUMBER) {
         cerr << "Not enough arguments\n";
         return EXIT_FAILURE;
     }
@@ -138,15 +143,35 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    /*vector<string> name_row(6);
+    vector<string> name_row(NAME_ROW_LENGTH);
+    vector<string> title_row(TITLE_ROW_LENGTH);
     get_name_row(dirs_file, name_row);
-    cout << "\nTest\n" << check_name_fields(name_row);
-    get_name_row(dirs_file, name_row);
-    get_name_row(dirs_file, name_row);
-
-    vector<string> title_row(9);
     get_title_row(titles_file, title_row);
-    cout << "\nTest\n" << check_title_fields(title_row);*/
+    // Checking format of first row in files
+    if (check_name_fields(name_row) || check_title_fields(title_row)) {
+        cerr << "Invalid column titles\n";
+        return EXIT_FAILURE;
+    }
+
+    // Searching for given director
+    while (!dirs_file.eof()) {
+        if (get_name_row(dirs_file, name_row)) {
+            dirs_file.close();
+            titles_file.close();
+            return EXIT_FAILURE;
+        }
+        if (name_row[1] == dirs_name) {
+            if (name_row[4].find("director") == string::npos) {
+                cerr << "Given person never been director\n";
+                dirs_file.close();
+                titles_file.close();
+                return EXIT_FAILURE;
+            }
+            // If found
+            dirs_file.close();
+            break;
+        }
+    }
 
     dirs_file.close();
     titles_file.close();
