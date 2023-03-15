@@ -104,12 +104,22 @@ int check_title_fields(const vector<string> &buf) {
 }
 
 int tconst_to_int(const string &s) {
-    int res = stoi(s.substr(s.find("tt")+2, TCONST_NUM_LENGTH));
+    int res = 0;
+    if (s.find("tt") != string::npos) {
+        res = stoi(s.substr(s.find("tt")+2, TCONST_NUM_LENGTH));
+    }
     if (res == 0) {
         cerr << "Warning: tconst_to_int return 0\n";
     }
     return res;
 }
+
+/*string int_to_tconst(const int a) {
+    int power = 10;
+    for (int i=1; i<TCONST_NUM_LENGTH; i++) {
+        if ()
+    }
+}*/
 
 int main(int argc, char *argv[]) {
     cout << tconst_to_int("tt0123") << endl;
