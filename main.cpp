@@ -5,6 +5,7 @@
 #define NAME_ROW_LENGTH 6
 #define TITLE_ROW_LENGTH 9
 #define ARG_NUMBER 7
+#define TCONST_NUM_LENGTH 7
 
 using namespace std;
 
@@ -102,7 +103,17 @@ int check_title_fields(const vector<string> &buf) {
     return 0;
 }
 
+int tconst_to_int(const string &s) {
+    int res = stoi(s.substr(s.find("tt")+2, TCONST_NUM_LENGTH));
+    if (res == 0) {
+        cerr << "Warning: tconst_to_int return 0\n";
+    }
+    return res;
+}
+
 int main(int argc, char *argv[]) {
+    cout << tconst_to_int("tt0123") << endl;
+    return EXIT_SUCCESS;
     // Argument parsing
     // -d /path/to/directors.csv     path to file with directors names
     // -t /path/to/titles.csv        path to file with titles
