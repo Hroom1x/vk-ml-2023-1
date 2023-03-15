@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "vector"
+#include <algorithm>
 
 #define NAME_ROW_LENGTH 6
 #define TITLE_ROW_LENGTH 9
@@ -12,7 +13,7 @@ using namespace std;
 
 int get_name_row(ifstream &file, vector<string> &row) {
     if (row.size() != NAME_ROW_LENGTH) {
-        cerr << "Name row buffer must be length " << NAME_ROW_LENGTH << endl;
+        cerr << "Names row must be length " << NAME_ROW_LENGTH << endl;
         return -1;
     }
     if (file.eof()) {
@@ -42,7 +43,7 @@ int get_name_row(ifstream &file, vector<string> &row) {
 
 int get_title_row(ifstream &file, vector<string> &row) {
     if (row.size() != TITLE_ROW_LENGTH) {
-        cerr << "Title row buffer must be length " << TITLE_ROW_LENGTH << endl;
+        cerr << "Titles row must be length " << TITLE_ROW_LENGTH << endl;
         return -1;
     }
     if (file.eof()) {
@@ -103,10 +104,10 @@ int check_title_fields(const vector<string> &buf) {
     return 0;
 }
 
-int tconst_to_int(const string &s) {
+int tconst_to_int(const string &s, int pos) {
     int res = 0;
-    if (s.find("tt") != string::npos) {
-        res = stoi(s.substr(s.find("tt")+2, TCONST_NUM_LENGTH));
+    if (s.find("tt", pos) != string::npos) {
+        res = stoi(s.substr(s.find("tt", pos)+2, TCONST_NUM_LENGTH));
     }
     if (res == 0) {
         cerr << "Warning: tconst_to_int return 0\n";
@@ -128,8 +129,25 @@ string int_to_tconst(const int a) {
     return "";
 }
 
+int sort_names_tconst(const vector<string> &names, vector<string> &to) {
+    if (names.size() != NAME_ROW_LENGTH) {
+        cerr << "Names row must be length " << NAME_ROW_LENGTH << endl;
+        return -1;
+    }
+
+    while (names[5].find("tt", to.size()*(TCONST_NUM_LENGTH+2)) != string::npos) {
+        to.push_back(names[5].substr(names[5].find("tt", to.size()*(TCONST_NUM_LENGTH+2))+2, TCONST_NUM_LENGTH));
+    }
+    sort(to.begin(), to.end());
+
+    return 0;
+}
+
 int main(int argc, char *argv[]) {
-    string test = int_to_tconst(123);
+    vector<string> test(6);
+    test[5] = "tt0000001,tt0000003,tt0000002,tt0000022,tt0000011,tt0000033";
+    vector<string> sorted;
+    sort_names_tconst(test, sorted);
     return EXIT_SUCCESS;
     // Argument parsing
     // -d /path/to/directors.csv     path to file with directors names
