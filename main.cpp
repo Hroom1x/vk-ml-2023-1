@@ -10,13 +10,61 @@ int get_name_row(ifstream &file, vector<string> &buf) {
         return -1;
     }
     string test;
-    for (int i=0; i<6; i++) {
+    for (auto & i : buf) {
         if (file.eof()) {
             cerr << "Function get_name_row reached the eof\n";
             return -1;
         }
-        file >> test;
-        cout << endl;
+        file >> i;
+    }
+    return 0;
+}
+
+int get_title_row(ifstream &file, vector<string> &buf) {
+    if (buf.size() != 9) {
+        cerr << "Name row buffer must be length 6\n";
+        return -1;
+    }
+    string test;
+    for (auto & i : buf) {
+        if (file.eof()) {
+            cerr << "Function get_name_row reached the eof\n";
+            return -1;
+        }
+        file >> i;
+    }
+    return 0;
+}
+
+int check_name_fields(vector<string> buf) {
+    vector<string> agent = {
+            "nconst",
+            "primaryName",
+            "birthYear",
+            "deathYear",
+            "primaryProfession",
+            "knownForTitles"
+    };
+    if (buf != agent) {
+        return -1;
+    }
+    return 0;
+}
+
+int check_title_fields(vector<string> buf) {
+    vector<string> agent = {
+            "tconst",
+            "titleType",
+            "primaryTitle",
+            "originalTitle",
+            "isAdult",
+            "startYear",
+            "endYear",
+            "runtimeMinutes",
+            "genres"
+    };
+    if (buf != agent) {
+        return -1;
     }
     return 0;
 }
@@ -62,17 +110,13 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    vector<string> row(6);
-    get_name_row(dirs_file, row);
+    vector<string> name_row(6);
+    get_name_row(dirs_file, name_row);
+    cout << "\nTest\n" << check_name_fields(name_row);
 
-    /*
-    string buf;
-    while (true) {
-        cin >> buf;
-        getline(dirs_file, buf);
-        cout << buf;
-    }
-     */
+    vector<string> title_row(9);
+    get_title_row(titles_file, title_row);
+    cout << "\nTest\n" << check_title_fields(title_row);
 
     dirs_file.close();
     titles_file.close();
