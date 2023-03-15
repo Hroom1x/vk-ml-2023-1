@@ -5,39 +5,43 @@ using namespace std;
 
 
 int main(int argc, char *argv[]) {
-    FILE *directors_file = nullptr;
-    FILE *titles_file = nullptr;
+    ifstream directors_file;
+    ifstream titles_file;
 
     // Argument parsing
     // -d /path/to/directors.csv     path to file with directors names
     // -t /path/to/titles.csv        path to file with titles
+    if (argc < 5) {
+        cerr << "Not enough arguments\n";
+        return EXIT_FAILURE;
+    }
     for (int i=1; i<argc;) {
         if (argv[i][0] != '-') {
-            fprintf(stderr, "Invalid argument\n");
+            cerr << "Invalid argument\n";
             return EXIT_FAILURE;
         }
 
         if (argv[i][1] == 'd') {
-            directors_file = fopen(argv[i+1], "r");
-            if (directors_file == nullptr) {
-                fprintf(stderr, "Invalid path\n");
+            directors_file.open(argv[i+1], ios::in);
+            if (!directors_file.is_open()) {
+                cerr << "Invalid path\n";
                 return EXIT_FAILURE;
             }
             i += 2;
         } else if (argv[i][1] == 't') {
-            titles_file = fopen(argv[i+1], "r");
-            if (titles_file == nullptr) {
-                fprintf(stderr, "Invalid path\n");
+            titles_file.open(argv[i+1], ios::in);
+            if (!titles_file.is_open()) {
+                cerr << "Invalid path\n";
                 return EXIT_FAILURE;
             }
             i += 2;
         } else {
-            fprintf(stderr, "Unknown flag\n");
+            cerr << "Unknown flag\n";
             return EXIT_FAILURE;
         }
     }
 
-    if (directors_file) fclose(directors_file);
-    if (titles_file) fclose(titles_file);
+    directors_file.close();
+    titles_file.close();
     return EXIT_SUCCESS;
 }
