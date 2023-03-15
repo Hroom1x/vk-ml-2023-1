@@ -2,6 +2,7 @@
 #include <fstream>
 #include "vector"
 #include <algorithm>
+#include <clocale>
 
 #define NAME_ROW_LENGTH 6
 #define TITLE_ROW_LENGTH 9
@@ -144,11 +145,9 @@ int sort_names_tconst(const vector<string> &names, vector<string> &to) {
 }
 
 int main(int argc, char *argv[]) {
-    vector<string> test(6);
-    test[5] = "tt0000001,tt0000003,tt0000002,tt0000022,tt0000011,tt0000033";
-    vector<string> sorted;
-    sort_names_tconst(test, sorted);
-    return EXIT_SUCCESS;
+    /*setlocale(0,"UTF8");
+    cout << 'а' << "   " << 'я' << endl;
+    return EXIT_SUCCESS;*/
     // Argument parsing
     // -d /path/to/directors.csv     path to file with directors names
     // -t /path/to/titles.csv        path to file with titles
@@ -200,6 +199,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Searching for given director
+    vector<string> titles;
     while (!dirs_file.eof()) {
         if (get_name_row(dirs_file, name_row)) {
             dirs_file.close();
@@ -214,8 +214,24 @@ int main(int argc, char *argv[]) {
                 return EXIT_FAILURE;
             }
             // If found
+            sort_names_tconst(name_row, titles);
             dirs_file.close();
             break;
+        }
+    }
+
+    // Searching for given titles
+    while (!titles_file.eof() && !titles.empty()) {
+        get_title_row(titles_file, title_row);
+
+        // We suppose that file with titles sorted by ids
+        if (title_row[0] == titles[0]) {
+            if (title_row[4] == "0") {
+                if (title_row[1] == "movie") {
+
+                }
+            }
+            titles.erase(titles.begin());
         }
     }
 
