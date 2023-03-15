@@ -114,15 +114,22 @@ int tconst_to_int(const string &s) {
     return res;
 }
 
-/*string int_to_tconst(const int a) {
+string int_to_tconst(const int a) {
     int power = 10;
+    string res = "tt";
     for (int i=1; i<TCONST_NUM_LENGTH; i++) {
-        if ()
+        if (a%power == a) {
+            res.insert(res.end(), TCONST_NUM_LENGTH-i, '0');
+            res.append(to_string(a));
+            return res;
+        }
+        power*=10;
     }
-}*/
+    return "";
+}
 
 int main(int argc, char *argv[]) {
-    cout << tconst_to_int("tt0123") << endl;
+    string test = int_to_tconst(123);
     return EXIT_SUCCESS;
     // Argument parsing
     // -d /path/to/directors.csv     path to file with directors names
