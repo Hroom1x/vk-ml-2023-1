@@ -74,7 +74,7 @@ int get_title_row(ifstream &file, vector<string> &row) {
 
 int get_acas_row(ifstream &file, vector<string> &row) {
     if (row.size() != ACAS_ROW_LENGTH) {
-        cerr << "Titles row must be length " << ACAS_ROW_LENGTH << endl;
+        cerr << "Acas row must be length " << ACAS_ROW_LENGTH << endl;
         return -1;
     }
     if (file.eof()) {
@@ -191,8 +191,8 @@ int sort_names_tconst(const vector<string> &names, vector<string> &to) {
     return 0;
 }
 
-int is_russian_char(char c) {
-    return c;
+int is_russian_char(const string &s) {
+    //return c;
     //return (c >= -32 && c <= -1) || (c >= -96 && c <= -65);
 }
 
@@ -223,21 +223,21 @@ int main(int argc, char *argv[]) {
         if (argv[i][1] == 'd') {
             dirs_file.open(argv[i + 1], ios::in);
             if (!dirs_file.is_open()) {
-                cerr << "Invalid path\n";
+                cerr << "Invalid path to directors names\n";
                 return EXIT_FAILURE;
             }
             i += 2;
         } else if (argv[i][1] == 't') {
             titles_file.open(argv[i+1], ios::in);
             if (!titles_file.is_open()) {
-                cerr << "Invalid path\n";
+                cerr << "Invalid path to titles\n";
                 return EXIT_FAILURE;
             }
             i += 2;
         } else if (argv[i][1] == 'a') {
             acas_file.open(argv[i+1], ios::in);
             if (!titles_file.is_open()) {
-                cerr << "Invalid path\n";
+                cerr << "Invalid path to acas\n";
                 return EXIT_FAILURE;
             }
             i += 2;
@@ -252,7 +252,7 @@ int main(int argc, char *argv[]) {
 
     vector<string> name_row(NAME_ROW_LENGTH);
     vector<string> title_row(TITLE_ROW_LENGTH);
-    vector<string> acas_row(TITLE_ROW_LENGTH);
+    vector<string> acas_row(ACAS_ROW_LENGTH);
     get_name_row(dirs_file, name_row);
     get_title_row(titles_file, title_row);
     get_acas_row(acas_file, acas_row);
