@@ -191,14 +191,37 @@ int sort_names_tconst(const vector<string> &names, vector<string> &to) {
     return 0;
 }
 
-int is_russian_char(const string &s) {
-    //return c;
-    //return (c >= -32 && c <= -1) || (c >= -96 && c <= -65);
+bool is_russian_title(const string &s) {
+    if (s.size() < 2) {
+        cerr << "Function is_russian_title got string with size < 2\n";
+        return false;
+    }
+    for (int i=1; i<s.size(); i++) {
+        if (s[i-1] >= 32 && s[i-1] <= 64) {
+            // Chars [32; 64] can be found in title with any language
+            continue;
+        }
+        if (s[i-1] != -47 && s[i-1] != -48) {
+            // First char of cyrillic symbol is -47 or -48
+            cout << i-1 << endl;
+            return false;
+        }
+        if (s[i] >= -128 && s[i] <= -65) {
+            // Cyrillic symbol found
+            i++;
+            continue;
+        } else {
+            return false;
+        }
+    }
+    return true;
 }
 
+// String that contains all whitelist symbols
+// " !\"#$%&'()*+,-./0123456789:;<=>?@абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
 int main(int argc, char *argv[]) {
-    /*string test = "è";
-    cout << "Size: " << test.size() << endl << int(test[0]) << "   " << int(test[1]) << endl;
+    /*string test = " !\"#$%&'()*+,-./0123456789:;<=>?@абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+    cout << is_russian_title(test);
     return EXIT_SUCCESS;*/
 
     // Argument parsing
@@ -299,9 +322,20 @@ int main(int argc, char *argv[]) {
                 count++;
             }
         }
+        titles_file.close();
+    }
+
+    // Searching for russian titles
+    {
+        int count = 0;
+        while (!acas_file.eof()) {
+            get_acas_row(titles_file, acas_row);
+        }
+        acas_file.close();
     }
 
     dirs_file.close();
     titles_file.close();
+    acas_file.close();
     return EXIT_SUCCESS;
 }
