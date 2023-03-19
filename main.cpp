@@ -1,13 +1,6 @@
 #include <iostream>
-#include <fstream>
 #include "vector"
-#include <algorithm>
-
-#define NAME_ROW_LENGTH 6
-#define TITLE_ROW_LENGTH 9
-#define akas_ROW_LENGTH 8
-#define ARG_NUMBER 7
-#define TCONST_NUM_LENGTH 7
+#include "utilities.hpp"
 
 using namespace std;
 
@@ -42,117 +35,7 @@ int get_name_row(ifstream &file, vector<string> &row) {
     return 0;
 }
 
-int get_title_row(ifstream &file, vector<string> &row) {
-    if (row.size() != TITLE_ROW_LENGTH) {
-        cerr << "Titles row must be length " << TITLE_ROW_LENGTH << endl;
-        return -1;
-    }
-    if (file.eof()) {
-        cerr << "Function get_title_row reached the eof\n";
-        return -1;
-    }
-    string line, buf;
-    getline(file, line);
-    int count = 0;
-    for (char i : line) {
-        if (i != '\t') {
-            buf += i;
-        } else if (count<row.size()) {
-            row[count++] = buf;
-            buf.clear();
-        }
-    }
-    if (!buf.empty()) {
-        row[count++] = buf;
-    }
-    if (count != row.size()) {
-        cerr << "Invalid titles row\n";
-        return -1;
-    }
-    return 0;
-}
-
-int get_akas_row(ifstream &file, vector<string> &row) {
-    if (row.size() != akas_ROW_LENGTH) {
-        cerr << "akas row must be length " << akas_ROW_LENGTH << endl;
-        return -1;
-    }
-    if (file.eof()) {
-        cerr << "Function get_akas_row reached the eof\n";
-        return -1;
-    }
-    string line, buf;
-    getline(file, line);
-    int count = 0;
-    for (char i : line) {
-        if (i != '\t') {
-            buf += i;
-        } else if (count<row.size()) {
-            row[count++] = buf;
-            buf.clear();
-        }
-    }
-    if (!buf.empty()) {
-        row[count++] = buf;
-    }
-    if (count != row.size()) {
-        cerr << "Invalid akas row\n";
-        return -1;
-    }
-    return 0;
-}
-
-int check_name_fields(const vector<string> &buf) {
-    vector<string> agent = {
-            "nconst",
-            "primaryName",
-            "birthYear",
-            "deathYear",
-            "primaryProfession",
-            "knownForTitles"
-    };
-    if (buf != agent) {
-        return -1;
-    }
-    return 0;
-}
-
-int check_title_fields(const vector<string> &buf) {
-    vector<string> agent = {
-            "tconst",
-            "titleType",
-            "primaryTitle",
-            "originalTitle",
-            "isAdult",
-            "startYear",
-            "endYear",
-            "runtimeMinutes",
-            "genres"
-    };
-    if (buf != agent) {
-        return -1;
-    }
-    return 0;
-}
-
-int check_akas_fields(const vector<string> &buf) {
-    vector<string> agent = {
-            "titleId",
-            "ordering",
-            "title",
-            "region",
-            "language",
-            "types",
-            "attributes",
-            "isOriginalTitle"
-    };
-    if (buf != agent) {
-        return -1;
-    }
-    return 0;
-}
-
-int tconst_to_int(const string &s, int pos) {
+/*int tconst_to_int(const string &s, int pos) {
     int res = 0;
     if (s.find("tt", pos) != string::npos) {
         res = stoi(s.substr(s.find("tt", pos)+2, TCONST_NUM_LENGTH));
@@ -175,23 +58,9 @@ string int_to_tconst(const int a) {
         power*=10;
     }
     return "";
-}
+}*/
 
-int sort_names_tconst(const vector<string> &names, vector<string> &to) {
-    if (names.size() != NAME_ROW_LENGTH) {
-        cerr << "Names row must be length " << NAME_ROW_LENGTH << endl;
-        return -1;
-    }
-
-    while (names[5].find("tt", to.size()*(TCONST_NUM_LENGTH+2)) != string::npos) {
-        to.push_back(names[5].substr(names[5].find("tt", to.size()*(TCONST_NUM_LENGTH+2)), TCONST_NUM_LENGTH+2));
-    }
-    sort(to.begin(), to.end());
-
-    return 0;
-}
-
-bool is_russian_title(const string &s) {
+/*bool is_russian_title(const string &s) {
     if (s.size() < 2) {
         cerr << "Function is_russian_title got string with size < 2\n";
         return false;
@@ -214,15 +83,9 @@ bool is_russian_title(const string &s) {
         }
     }
     return true;
-}
+}*/
 
-// String that contains all whitelist symbols
-// " !\"#$%&'()*+,-./0123456789:;<=>?@абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
 int main(int argc, char *argv[]) {
-    /*string test = " !\"#$%&'()*+,-./0123456789:;<=>?@абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-    cout << is_russian_title(test);
-    return EXIT_SUCCESS;*/
-
     // Argument parsing
     // -d /path/to/name.basics.tsv       path to file with directors names
     // -t /path/to/titles.basics.tsv     path to file with titles
@@ -274,7 +137,7 @@ int main(int argc, char *argv[]) {
 
     vector<string> name_row(NAME_ROW_LENGTH);
     vector<string> title_row(TITLE_ROW_LENGTH);
-    vector<string> akas_row(akas_ROW_LENGTH);
+    vector<string> akas_row(AKAS_ROW_LENGTH);
     get_name_row(dirs_file, name_row);
     get_title_row(titles_file, title_row);
     get_akas_row(akas_file, akas_row);
