@@ -203,7 +203,6 @@ bool is_russian_title(const string &s) {
         }
         if (s[i-1] != -47 && s[i-1] != -48) {
             // First char of cyrillic symbol is -47 or -48
-            cout << i-1 << endl;
             return false;
         }
         if (s[i] >= -128 && s[i] <= -65) {
@@ -336,8 +335,23 @@ int main(int argc, char *argv[]) {
     // Searching for russian titles
     {
         int count = 0;
-        while (!akas_file.eof()) {
-            get_akas_row(titles_file, akas_row);
+        vector<string> titles_with_rus_chars;
+        while (!akas_file.eof() && count<titles.size()) {
+            get_akas_row(akas_file, akas_row);
+            if (akas_row[0] == titles[count]) {
+                while (akas_row[0] == titles[count] && !akas_file.eof()) {
+                    get_akas_row(akas_file, akas_row);
+                    if (akas_row[3] == "RU" || akas_row[3] == "ru") {
+                        titles_with_rus_chars.push_back(akas_row[2]);
+                    }
+                }
+                count++;
+            }
+        }
+        if (titles_with_rus_chars.empty()) {
+            cout << "Titles on russian not found\n";
+        } else for (string &title : titles_with_rus_chars) {
+            cout << title << endl;
         }
         akas_file.close();
     }
