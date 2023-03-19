@@ -5,56 +5,6 @@
 using namespace std;
 
 
-/*int tconst_to_int(const string &s, int pos) {
-    int res = 0;
-    if (s.find("tt", pos) != string::npos) {
-        res = stoi(s.substr(s.find("tt", pos)+2, TCONST_NUM_LENGTH));
-    }
-    if (res == 0) {
-        cerr << "Warning: tconst_to_int return 0\n";
-    }
-    return res;
-}
-
-string int_to_tconst(const int a) {
-    int power = 10;
-    string res = "tt";
-    for (int i=1; i<TCONST_NUM_LENGTH; i++) {
-        if (a%power == a) {
-            res.insert(res.end(), TCONST_NUM_LENGTH-i, '0');
-            res.append(to_string(a));
-            return res;
-        }
-        power*=10;
-    }
-    return "";
-}*/
-
-/*bool is_russian_title(const string &s) {
-    if (s.size() < 2) {
-        cerr << "Function is_russian_title got string with size < 2\n";
-        return false;
-    }
-    for (int i=1; i<s.size(); i++) {
-        if (s[i-1] >= 32 && s[i-1] <= 64) {
-            // Chars [32; 64] can be found in title with any language
-            continue;
-        }
-        if (s[i-1] != -47 && s[i-1] != -48) {
-            // First char of cyrillic symbol is -47 or -48
-            return false;
-        }
-        if (s[i] >= -128 && s[i] <= -65) {
-            // Cyrillic symbol found
-            i++;
-            continue;
-        } else {
-            return false;
-        }
-    }
-    return true;
-}*/
-
 int main(int argc, char *argv[]) {
     // Argument parsing
     // -d /path/to/name.basics.tsv       path to file with directors names
@@ -111,6 +61,7 @@ int main(int argc, char *argv[]) {
     get_name_row(dirs_file, name_row);
     get_title_row(titles_file, title_row);
     get_akas_row(akas_file, akas_row);
+
     // Checking format of first row in files
     if (check_name_fields(name_row)) {
         cerr << "Invalid column titles in names file\n";
@@ -127,66 +78,34 @@ int main(int argc, char *argv[]) {
 
     // Searching for given director
     vector<string> titles;
-    while (!dirs_file.eof()) {
-        if (get_name_row(dirs_file, name_row)) {
-            dirs_file.close();
-            titles_file.close();
-            return EXIT_FAILURE;
-        }
-        if (name_row[1] == dirs_name) {
-            if (name_row[4].find("director") == string::npos) {
-                cerr << "Given person never have been director\n";
-                dirs_file.close();
-                titles_file.close();
-                return EXIT_FAILURE;
-            }
-            // If found
-            sort_names_tconst(name_row, titles);
-            dirs_file.close();
-            break;
-        }
+    if (!find_director(dirs_file, name_row, dirs_name)) {
+        sort_names_tconst(name_row, titles);
+        dirs_file.close();
+    } else {
+        cerr << "Given director is not found\n";
+        dirs_file.close();
+        titles_file.close();
+        akas_file.close();
+        return EXIT_FAILURE;
     }
 
     // Searching for given titles and remove not suitable
-    {
-        int count = 0;
-        while (!titles_file.eof() && count<titles.size()) {
-            get_title_row(titles_file, title_row);
-
-            // We suppose that file with titles sorted by ids and have given titles
-            if (title_row[0] == titles[count]) {
-                if (title_row[4] != "0" || title_row[1] != "movie") {
-                    titles.erase(titles.begin()+count);
-                    count--;
-                }
-                count++;
-            }
-        }
+    if (!find_titles(titles_file, title_row, titles)) {
         titles_file.close();
+    } else {
+        cerr << "Given titles are not found\n";
+        dirs_file.close();
+        titles_file.close();
+        akas_file.close();
+        return EXIT_FAILURE;
     }
 
     // Searching for russian titles
-    {
-        int count = 0;
-        vector<string> titles_with_rus_chars;
-        while (!akas_file.eof() && count<titles.size()) {
-            get_akas_row(akas_file, akas_row);
-            if (akas_row[0] == titles[count]) {
-                while (akas_row[0] == titles[count] && !akas_file.eof()) {
-                    get_akas_row(akas_file, akas_row);
-                    if (akas_row[3] == "RU" || akas_row[3] == "ru") {
-                        titles_with_rus_chars.push_back(akas_row[2]);
-                    }
-                }
-                count++;
-            }
-        }
-        if (titles_with_rus_chars.empty()) {
-            cout << "Titles on russian not found\n";
-        } else for (string &title : titles_with_rus_chars) {
-            cout << title << endl;
-        }
-        akas_file.close();
+    vector<string> rus_titles = find_rus_titles(akas_file, akas_row, titles);
+    if (rus_titles.empty()) {
+        cout << "Titles on russian not found\n";
+    } else for (string &title : rus_titles) {
+        cout << title << endl;
     }
 
     dirs_file.close();

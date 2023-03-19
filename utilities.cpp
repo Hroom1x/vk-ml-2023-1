@@ -159,3 +159,56 @@ int sort_names_tconst(const vector<string> &names, vector<string> &to) {
 
     return 0;
 }
+
+int find_director(ifstream &file, vector<string> &row, const string &dirs_name) {
+    while (!file.eof()) {
+        if (get_name_row(file, row)) {
+            return -1;
+        }
+        if (row[1] == dirs_name) {
+            if (row[4].find("director") == string::npos) {
+                cerr << "Given person never have been director\n";
+                return -1;
+            }
+            return 0;
+        }
+    }
+}
+
+int find_titles(ifstream &file, vector<string> &row, vector<string> &titles) {
+    int count = 0;
+    while (count<titles.size() && !file.eof()) {
+        get_title_row(file, row);
+
+        // We suppose that file with titles sorted by ids and have given titles
+        if (row[0] == titles[count]) {
+            if (row[4] != "0" || row[1] != "movie") {
+                titles.erase(titles.begin()+count);
+                count--;
+            }
+            count++;
+        }
+    }
+    if (count == 0) {
+        return -1;
+    }
+    return 0;
+}
+
+vector<string> find_rus_titles(ifstream &file, vector<string> &row, const vector<string> &titles)  {
+    vector<string> rus_titles;
+    int count = 0;
+    while (count<titles.size() && !file.eof()) {
+        get_akas_row(file, row);
+        if (row[0] == titles[count]) {
+            while (row[0] == titles[count] && !file.eof()) {
+                get_akas_row(file, row);
+                if (row[3] == "RU" || row[3] == "ru") {
+                    rus_titles.push_back(row[2]);
+                }
+            }
+            count++;
+        }
+    }
+    return rus_titles;
+}
