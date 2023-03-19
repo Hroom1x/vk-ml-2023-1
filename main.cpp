@@ -5,7 +5,7 @@
 
 #define NAME_ROW_LENGTH 6
 #define TITLE_ROW_LENGTH 9
-#define ACAS_ROW_LENGTH 8
+#define akas_ROW_LENGTH 8
 #define ARG_NUMBER 7
 #define TCONST_NUM_LENGTH 7
 
@@ -66,19 +66,19 @@ int get_title_row(ifstream &file, vector<string> &row) {
         row[count++] = buf;
     }
     if (count != row.size()) {
-        cerr << "Invalid name row\n";
+        cerr << "Invalid titles row\n";
         return -1;
     }
     return 0;
 }
 
-int get_acas_row(ifstream &file, vector<string> &row) {
-    if (row.size() != ACAS_ROW_LENGTH) {
-        cerr << "Acas row must be length " << ACAS_ROW_LENGTH << endl;
+int get_akas_row(ifstream &file, vector<string> &row) {
+    if (row.size() != akas_ROW_LENGTH) {
+        cerr << "akas row must be length " << akas_ROW_LENGTH << endl;
         return -1;
     }
     if (file.eof()) {
-        cerr << "Function get_acas_row reached the eof\n";
+        cerr << "Function get_akas_row reached the eof\n";
         return -1;
     }
     string line, buf;
@@ -96,7 +96,7 @@ int get_acas_row(ifstream &file, vector<string> &row) {
         row[count++] = buf;
     }
     if (count != row.size()) {
-        cerr << "Invalid acas row\n";
+        cerr << "Invalid akas row\n";
         return -1;
     }
     return 0;
@@ -135,7 +135,7 @@ int check_title_fields(const vector<string> &buf) {
     return 0;
 }
 
-int check_acas_fields(const vector<string> &buf) {
+int check_akas_fields(const vector<string> &buf) {
     vector<string> agent = {
             "titleId",
             "ordering",
@@ -184,7 +184,7 @@ int sort_names_tconst(const vector<string> &names, vector<string> &to) {
     }
 
     while (names[5].find("tt", to.size()*(TCONST_NUM_LENGTH+2)) != string::npos) {
-        to.push_back(names[5].substr(names[5].find("tt", to.size()*(TCONST_NUM_LENGTH+2))+2, TCONST_NUM_LENGTH));
+        to.push_back(names[5].substr(names[5].find("tt", to.size()*(TCONST_NUM_LENGTH+2)), TCONST_NUM_LENGTH+2));
     }
     sort(to.begin(), to.end());
 
@@ -227,7 +227,7 @@ int main(int argc, char *argv[]) {
     // Argument parsing
     // -d /path/to/name.basics.tsv       path to file with directors names
     // -t /path/to/titles.basics.tsv     path to file with titles
-    // -a /path/to/titles.acas.tsv       path to file with titles localization
+    // -a /path/to/titles.akas.tsv       path to file with titles localization
     // -n "Directors name"               directors name to search films
     if (argc < ARG_NUMBER) {
         cerr << "Not enough arguments\n";
@@ -235,7 +235,7 @@ int main(int argc, char *argv[]) {
     }
     ifstream dirs_file;
     ifstream titles_file;
-    ifstream acas_file;
+    ifstream akas_file;
     string dirs_name;
     for (int i=1; i<argc;) {
         if (argv[i][0] != '-') {
@@ -258,9 +258,9 @@ int main(int argc, char *argv[]) {
             }
             i += 2;
         } else if (argv[i][1] == 'a') {
-            acas_file.open(argv[i+1], ios::in);
-            if (!acas_file.is_open()) {
-                cerr << "Invalid path to acas\n";
+            akas_file.open(argv[i+1], ios::in);
+            if (!akas_file.is_open()) {
+                cerr << "Invalid path to akas\n";
                 return EXIT_FAILURE;
             }
             i += 2;
@@ -275,10 +275,10 @@ int main(int argc, char *argv[]) {
 
     vector<string> name_row(NAME_ROW_LENGTH);
     vector<string> title_row(TITLE_ROW_LENGTH);
-    vector<string> acas_row(ACAS_ROW_LENGTH);
+    vector<string> akas_row(akas_ROW_LENGTH);
     get_name_row(dirs_file, name_row);
     get_title_row(titles_file, title_row);
-    get_acas_row(acas_file, acas_row);
+    get_akas_row(akas_file, akas_row);
     // Checking format of first row in files
     if (check_name_fields(name_row)) {
         cerr << "Invalid column titles in names file\n";
@@ -288,8 +288,8 @@ int main(int argc, char *argv[]) {
         cerr << "Invalid column titles in titles file\n";
         return EXIT_FAILURE;
     }
-    if (check_acas_fields(acas_row)) {
-        cerr << "Invalid column titles in acas file\n";
+    if (check_akas_fields(akas_row)) {
+        cerr << "Invalid column titles in akas file\n";
         return EXIT_FAILURE;
     }
 
@@ -318,7 +318,7 @@ int main(int argc, char *argv[]) {
     // Searching for given titles and remove not suitable
     {
         int count = 0;
-        while (!titles_file.eof() && !titles.empty()) {
+        while (!titles_file.eof() && count<titles.size()) {
             get_title_row(titles_file, title_row);
 
             // We suppose that file with titles sorted by ids and have given titles
@@ -336,14 +336,14 @@ int main(int argc, char *argv[]) {
     // Searching for russian titles
     {
         int count = 0;
-        while (!acas_file.eof()) {
-            get_acas_row(titles_file, acas_row);
+        while (!akas_file.eof()) {
+            get_akas_row(titles_file, akas_row);
         }
-        acas_file.close();
+        akas_file.close();
     }
 
     dirs_file.close();
     titles_file.close();
-    acas_file.close();
+    akas_file.close();
     return EXIT_SUCCESS;
 }
