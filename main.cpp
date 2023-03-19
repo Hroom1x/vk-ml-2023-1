@@ -96,7 +96,7 @@ int get_acas_row(ifstream &file, vector<string> &row) {
         row[count++] = buf;
     }
     if (count != row.size()) {
-        cerr << "Invalid name row\n";
+        cerr << "Invalid acas row\n";
         return -1;
     }
     return 0;
@@ -259,7 +259,7 @@ int main(int argc, char *argv[]) {
             i += 2;
         } else if (argv[i][1] == 'a') {
             acas_file.open(argv[i+1], ios::in);
-            if (!titles_file.is_open()) {
+            if (!acas_file.is_open()) {
                 cerr << "Invalid path to acas\n";
                 return EXIT_FAILURE;
             }
