@@ -280,8 +280,16 @@ int main(int argc, char *argv[]) {
     get_title_row(titles_file, title_row);
     get_acas_row(acas_file, acas_row);
     // Checking format of first row in files
-    if (check_name_fields(name_row) || check_title_fields(title_row) || check_acas_fields(acas_row)) {
-        cerr << "Invalid column titles\n";
+    if (check_name_fields(name_row)) {
+        cerr << "Invalid column titles in names file\n";
+        return EXIT_FAILURE;
+    }
+    if (check_title_fields(title_row)) {
+        cerr << "Invalid column titles in titles file\n";
+        return EXIT_FAILURE;
+    }
+    if (check_acas_fields(acas_row)) {
+        cerr << "Invalid column titles in acas file\n";
         return EXIT_FAILURE;
     }
 
