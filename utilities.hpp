@@ -13,12 +13,18 @@
 using namespace std;
 
 
-int get_akas_row(ifstream &file, vector<string> &row);
+int get_name_row(ifstream &file, vector<string> &row);
+
 int get_title_row(ifstream &file, vector<string> &row);
+
 int get_akas_row(ifstream &file, vector<string> &row);
+
 int check_name_fields(const vector<string> &buf);
+
 int check_title_fields(const vector<string> &buf);
+
 int check_akas_fields(const vector<string> &buf);
+
 int sort_names_tconst(const vector<string> &names, vector<string> &to);
 
 #endif  // HOMEWORK_UTILITIES_HPP

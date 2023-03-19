@@ -5,36 +5,6 @@
 using namespace std;
 
 
-int get_name_row(ifstream &file, vector<string> &row) {
-    if (row.size() != NAME_ROW_LENGTH) {
-        cerr << "Names row must be length " << NAME_ROW_LENGTH << endl;
-        return -1;
-    }
-    if (file.eof()) {
-        cerr << "Function get_name_row reached the eof\n";
-        return -1;
-    }
-    string line, buf;
-    getline(file, line);
-    int count = 0;
-    for (char i : line) {
-        if (i != '\t') {
-            buf += i;
-        } else if (count<row.size()) {
-            row[count++] = buf;
-            buf.clear();
-        }
-    }
-    if (!buf.empty()) {
-        row[count++] = buf;
-    }
-    if (count != row.size()) {
-        cerr << "Invalid name row\n";
-        return -1;
-    }
-    return 0;
-}
-
 /*int tconst_to_int(const string &s, int pos) {
     int res = 0;
     if (s.find("tt", pos) != string::npos) {
