@@ -21,7 +21,7 @@ int get_name_row(ifstream &file, vector<string> &row) {
     for (char i : line) {
         if (i != '\t') {
             buf += i;
-        } else if (count<row.size()) {
+        } else if (count<int(row.size())) {
             row[count++] = buf;
             buf.clear();
         }
@@ -29,7 +29,7 @@ int get_name_row(ifstream &file, vector<string> &row) {
     if (!buf.empty()) {
         row[count++] = buf;
     }
-    if (count != row.size()) {
+    if (count != int(row.size())) {
         cerr << "Invalid name row\n";
         return -1;
     }
@@ -51,7 +51,7 @@ int get_title_row(ifstream &file, vector<string> &row) {
     for (char i : line) {
         if (i != '\t') {
             buf += i;
-        } else if (count<row.size()) {
+        } else if (count<int(row.size())) {
             row[count++] = buf;
             buf.clear();
         }
@@ -59,7 +59,7 @@ int get_title_row(ifstream &file, vector<string> &row) {
     if (!buf.empty()) {
         row[count++] = buf;
     }
-    if (count != row.size()) {
+    if (count != int(row.size())) {
         cerr << "Invalid titles row\n";
         return -1;
     }
@@ -68,7 +68,7 @@ int get_title_row(ifstream &file, vector<string> &row) {
 
 int get_akas_row(ifstream &file, vector<string> &row) {
     if (row.size() != AKAS_ROW_LENGTH) {
-        cerr << "akas row must be length " << AKAS_ROW_LENGTH << endl;
+        cerr << "Akas row must be length " << AKAS_ROW_LENGTH << endl;
         return -1;
     }
     if (file.eof()) {
@@ -81,7 +81,7 @@ int get_akas_row(ifstream &file, vector<string> &row) {
     for (char i : line) {
         if (i != '\t') {
             buf += i;
-        } else if (count<row.size()) {
+        } else if (count<int(row.size())) {
             row[count++] = buf;
             buf.clear();
         }
@@ -89,7 +89,7 @@ int get_akas_row(ifstream &file, vector<string> &row) {
     if (!buf.empty()) {
         row[count++] = buf;
     }
-    if (count != row.size()) {
+    if (count != int(row.size())) {
         cerr << "Invalid akas row\n";
         return -1;
     }
@@ -173,11 +173,13 @@ int find_director(ifstream &file, vector<string> &row, const string &dirs_name) 
             return 0;
         }
     }
+    cerr << "Person not found\n";
+    return -1;
 }
 
 int find_titles(ifstream &file, vector<string> &row, vector<string> &titles) {
     int count = 0;
-    while (count<titles.size() && !file.eof()) {
+    while (count<int(titles.size()) && !file.eof()) {
         get_title_row(file, row);
 
         // We suppose that file with titles sorted by ids and have given titles
@@ -198,7 +200,7 @@ int find_titles(ifstream &file, vector<string> &row, vector<string> &titles) {
 vector<string> find_rus_titles(ifstream &file, vector<string> &row, const vector<string> &titles)  {
     vector<string> rus_titles;
     int count = 0;
-    while (count<titles.size() && !file.eof()) {
+    while (count<int(titles.size()) && !file.eof()) {
         get_akas_row(file, row);
         if (row[0] == titles[count]) {
             while (row[0] == titles[count] && !file.eof()) {
