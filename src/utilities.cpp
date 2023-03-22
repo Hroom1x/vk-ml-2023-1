@@ -1,4 +1,4 @@
-#include "utilities.hpp"
+#include "../include/utilities.hpp"
 
 
 bool argParse(int argc, char *argv[], std::ifstream &dirs_file, std::ifstream &titles_file, std::ifstream &akas_file,
