@@ -1,5 +1,4 @@
-#ifndef HOMEWORK_UTILITIES_HPP
-#define HOMEWORK_UTILITIES_HPP
+#pragma once
 
 #include <fstream>
 #include <vector>
@@ -30,5 +29,3 @@ int find_director(std::ifstream &file, std::vector<std::string> &row, const std:
 int find_titles(std::ifstream &file, std::vector<std::string> &row, std::vector<std::string> &titles);
 
 std::vector<std::string> find_rus_titles(std::ifstream &file, std::vector<std::string> &row, const std::vector<std::string> &titles);
-
-#endif  // HOMEWORK_UTILITIES_HPP
