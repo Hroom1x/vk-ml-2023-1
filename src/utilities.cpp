@@ -4,14 +4,14 @@
 #include "utilities.hpp"
 
 
-int get_name_row(std::ifstream &file, std::vector<std::string> &row) {
+bool get_name_row(std::ifstream &file, std::vector<std::string> &row) {
     if (row.size() != NAME_ROW_LENGTH) {
         std::cerr << "Names row must be length " << NAME_ROW_LENGTH << std::endl;
-        return -1;
+        return true;
     }
     if (file.eof()) {
         std::cerr << "Function get_name_row reached the eof" << std::endl;
-        return -1;
+        return true;
     }
     std::string line, buf;
     getline(file, line);
@@ -29,19 +29,19 @@ int get_name_row(std::ifstream &file, std::vector<std::string> &row) {
     }
     if (count != int(row.size())) {
         std::cerr << "Invalid name row" << std::endl;
-        return -1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
-int get_title_row(std::ifstream &file, std::vector<std::string> &row) {
+bool get_title_row(std::ifstream &file, std::vector<std::string> &row) {
     if (row.size() != TITLE_ROW_LENGTH) {
         std::cerr << "Titles row must be length " << TITLE_ROW_LENGTH << std::endl;
-        return -1;
+        return true;
     }
     if (file.eof()) {
         std::cerr << "Function get_title_row reached the eof" << std::endl;
-        return -1;
+        return true;
     }
     std::string line, buf;
     getline(file, line);
@@ -59,19 +59,19 @@ int get_title_row(std::ifstream &file, std::vector<std::string> &row) {
     }
     if (count != int(row.size())) {
         std::cerr << "Invalid titles row" << std::endl;
-        return -1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
-int get_akas_row(std::ifstream &file, std::vector<std::string> &row) {
+bool get_akas_row(std::ifstream &file, std::vector<std::string> &row) {
     if (row.size() != AKAS_ROW_LENGTH) {
         std::cerr << "Akas row must be length " << AKAS_ROW_LENGTH << std::endl;
-        return -1;
+        return true;
     }
     if (file.eof()) {
         std::cerr << "Function get_akas_row reached the eof" << std::endl;
-        return -1;
+        return true;
     }
     std::string line, buf;
     getline(file, line);
@@ -89,12 +89,12 @@ int get_akas_row(std::ifstream &file, std::vector<std::string> &row) {
     }
     if (count != int(row.size())) {
         std::cerr << "Invalid akas row" << std::endl;
-        return -1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
-int check_name_fields(const std::vector<std::string> &buf) {
+bool check_name_fields(const std::vector<std::string> &buf) {
     std::vector<std::string> agent = {
             "nconst",
             "primaryName",
@@ -104,12 +104,12 @@ int check_name_fields(const std::vector<std::string> &buf) {
             "knownForTitles"
     };
     if (buf != agent) {
-        return -1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
-int check_title_fields(const std::vector<std::string> &buf) {
+bool check_title_fields(const std::vector<std::string> &buf) {
     std::vector<std::string> agent = {
             "tconst",
             "titleType",
@@ -122,12 +122,12 @@ int check_title_fields(const std::vector<std::string> &buf) {
             "genres"
     };
     if (buf != agent) {
-        return -1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
-int check_akas_fields(const std::vector<std::string> &buf) {
+bool check_akas_fields(const std::vector<std::string> &buf) {
     std::vector<std::string> agent = {
             "titleId",
             "ordering",
@@ -139,15 +139,15 @@ int check_akas_fields(const std::vector<std::string> &buf) {
             "isOriginalTitle"
     };
     if (buf != agent) {
-        return -1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
-int sort_names_tconst(const std::vector<std::string> &names, std::vector<std::string> &to) {
+bool sort_names_tconst(const std::vector<std::string> &names, std::vector<std::string> &to) {
     if (names.size() != NAME_ROW_LENGTH) {
         std::cerr << "Names row must be length " << NAME_ROW_LENGTH << std::endl;
-        return -1;
+        return true;
     }
 
     while (names[5].find("tt", to.size()*(TCONST_NUM_LENGTH+2)) != std::string::npos) {
@@ -155,27 +155,27 @@ int sort_names_tconst(const std::vector<std::string> &names, std::vector<std::st
     }
     sort(to.begin(), to.end());
 
-    return 0;
+    return false;
 }
 
-int find_director(std::ifstream &file, std::vector<std::string> &row, const std::string &dirs_name) {
+bool find_director(std::ifstream &file, std::vector<std::string> &row, const std::string &dirs_name) {
     while (!file.eof()) {
         if (get_name_row(file, row)) {
-            return -1;
+            return true;
         }
         if (row[1] == dirs_name) {
             if (row[4].find("director") == std::string::npos) {
                 std::cerr << "Given person never have been director" << std::endl;
-                return -1;
+                return true;
             }
-            return 0;
+            return false;
         }
     }
     std::cerr << "Person not found" << std::endl;
-    return -1;
+    return true;
 }
 
-int find_titles(std::ifstream &file, std::vector<std::string> &row, std::vector<std::string> &titles) {
+bool find_titles(std::ifstream &file, std::vector<std::string> &row, std::vector<std::string> &titles) {
     int count = 0;
     while (count<int(titles.size()) && !file.eof()) {
         get_title_row(file, row);
@@ -190,9 +190,9 @@ int find_titles(std::ifstream &file, std::vector<std::string> &row, std::vector<
         }
     }
     if (count == 0) {
-        return -1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 std::vector<std::string> find_rus_titles(std::ifstream &file, std::vector<std::string> &row, const std::vector<std::string> &titles)  {
