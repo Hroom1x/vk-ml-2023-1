@@ -10,7 +10,7 @@ int get_name_row(std::ifstream &file, std::vector<std::string> &row) {
         return -1;
     }
     if (file.eof()) {
-        std::cerr << "Function get_name_row reached the eof\n";
+        std::cerr << "Function get_name_row reached the eof" << std::endl;
         return -1;
     }
     std::string line, buf;
@@ -28,7 +28,7 @@ int get_name_row(std::ifstream &file, std::vector<std::string> &row) {
         row[count++] = buf;
     }
     if (count != int(row.size())) {
-        std::cerr << "Invalid name row\n";
+        std::cerr << "Invalid name row" << std::endl;
         return -1;
     }
     return 0;
@@ -40,7 +40,7 @@ int get_title_row(std::ifstream &file, std::vector<std::string> &row) {
         return -1;
     }
     if (file.eof()) {
-        std::cerr << "Function get_title_row reached the eof\n";
+        std::cerr << "Function get_title_row reached the eof" << std::endl;
         return -1;
     }
     std::string line, buf;
@@ -58,7 +58,7 @@ int get_title_row(std::ifstream &file, std::vector<std::string> &row) {
         row[count++] = buf;
     }
     if (count != int(row.size())) {
-        std::cerr << "Invalid titles row\n";
+        std::cerr << "Invalid titles row" << std::endl;
         return -1;
     }
     return 0;
@@ -70,7 +70,7 @@ int get_akas_row(std::ifstream &file, std::vector<std::string> &row) {
         return -1;
     }
     if (file.eof()) {
-        std::cerr << "Function get_akas_row reached the eof\n";
+        std::cerr << "Function get_akas_row reached the eof" << std::endl;
         return -1;
     }
     std::string line, buf;
@@ -88,7 +88,7 @@ int get_akas_row(std::ifstream &file, std::vector<std::string> &row) {
         row[count++] = buf;
     }
     if (count != int(row.size())) {
-        std::cerr << "Invalid akas row\n";
+        std::cerr << "Invalid akas row" << std::endl;
         return -1;
     }
     return 0;
@@ -165,13 +165,13 @@ int find_director(std::ifstream &file, std::vector<std::string> &row, const std:
         }
         if (row[1] == dirs_name) {
             if (row[4].find("director") == std::string::npos) {
-                std::cerr << "Given person never have been director\n";
+                std::cerr << "Given person never have been director" << std::endl;
                 return -1;
             }
             return 0;
         }
     }
-    std::cerr << "Person not found\n";
+    std::cerr << "Person not found" << std::endl;
     return -1;
 }
 
