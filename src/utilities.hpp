@@ -3,11 +3,11 @@
 #include <fstream>
 #include <vector>
 
-#define NAME_ROW_LENGTH 6
-#define TITLE_ROW_LENGTH 9
-#define AKAS_ROW_LENGTH 8
-#define ARG_NUMBER 7
-#define TCONST_NUM_LENGTH 7
+const int NAME_ROW_LENGTH = 6;
+const int TITLE_ROW_LENGTH = 9;
+const int AKAS_ROW_LENGTH = 8;
+const int ARG_NUMBER = 7;
+const int TCONST_NUM_LENGTH = 7;
 
 
 int get_name_row(std::ifstream &file, std::vector<std::string> &row);
