@@ -19,7 +19,7 @@ bool get_name_row(std::ifstream &file, std::vector<std::string> &row) {
     for (char i : line) {
         if (i != '\t') {
             buf += i;
-        } else if (count<int(row.size())) {
+        } else if (count < int(row.size())) {
             row[count++] = buf;
             buf.clear();
         }
@@ -49,7 +49,7 @@ bool get_title_row(std::ifstream &file, std::vector<std::string> &row) {
     for (char i : line) {
         if (i != '\t') {
             buf += i;
-        } else if (count<int(row.size())) {
+        } else if (count < int(row.size())) {
             row[count++] = buf;
             buf.clear();
         }
@@ -79,7 +79,7 @@ bool get_akas_row(std::ifstream &file, std::vector<std::string> &row) {
     for (char i : line) {
         if (i != '\t') {
             buf += i;
-        } else if (count<int(row.size())) {
+        } else if (count < int(row.size())) {
             row[count++] = buf;
             buf.clear();
         }
@@ -203,9 +203,9 @@ std::vector<std::string> find_rus_titles(std::ifstream &file, std::vector<std::s
         if (row[0] == titles[count]) {
             while (row[0] == titles[count] && !file.eof()) {
                 get_akas_row(file, row);
-                std::transform(row[3].begin(), row[3].end(), row[3].begin(),
-                               [](unsigned char c){ return std::tolower(c); });
-                if (row[3] == "ru") {
+                /*std::transform(row[3].begin(), row[3].end(), row[3].begin(),
+                               [](unsigned char c){ return std::tolower(c); });*/
+                if (std::tolower(row[3][0]) == 'r' && std::tolower(row[3][1]) == 'u') {
                     rus_titles.push_back(row[2]);
                 }
             }
