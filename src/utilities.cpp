@@ -1,8 +1,8 @@
 #include "utilities.hpp"
 
 
-bool arg_parse(int argc, char *argv[], std::ifstream &dirs_file, std::ifstream &titles_file, std::ifstream &akas_file,
-               std::string &dirs_name) {
+bool argParse(int argc, char *argv[], std::ifstream &dirs_file, std::ifstream &titles_file, std::ifstream &akas_file,
+              std::string &dirs_name) {
     if (argc < ARG_NUMBER) {
         std::cerr << "Not enough arguments" << std::endl;
         return true;
@@ -42,13 +42,13 @@ bool arg_parse(int argc, char *argv[], std::ifstream &dirs_file, std::ifstream &
     return false;
 }
 
-bool get_name_row(std::ifstream &file, std::vector<std::string> &row) {
+bool getNameRow(std::ifstream &file, std::vector<std::string> &row) {
     if (row.size() != NAME_ROW_LENGTH) {
         std::cerr << "Names row must be length " << NAME_ROW_LENGTH << std::endl;
         return true;
     }
     if (file.eof()) {
-        std::cerr << "Function get_name_row reached the eof" << std::endl;
+        std::cerr << "Function getNameRow reached the eof" << std::endl;
         return true;
     }
     std::string line, buf;
@@ -72,13 +72,13 @@ bool get_name_row(std::ifstream &file, std::vector<std::string> &row) {
     return false;
 }
 
-bool get_title_row(std::ifstream &file, std::vector<std::string> &row) {
+bool getTitleRow(std::ifstream &file, std::vector<std::string> &row) {
     if (row.size() != TITLE_ROW_LENGTH) {
         std::cerr << "Titles row must be length " << TITLE_ROW_LENGTH << std::endl;
         return true;
     }
     if (file.eof()) {
-        std::cerr << "Function get_title_row reached the eof" << std::endl;
+        std::cerr << "Function getTitleRow reached the eof" << std::endl;
         return true;
     }
     std::string line, buf;
@@ -102,13 +102,13 @@ bool get_title_row(std::ifstream &file, std::vector<std::string> &row) {
     return false;
 }
 
-bool get_akas_row(std::ifstream &file, std::vector<std::string> &row) {
+bool getAkasRow(std::ifstream &file, std::vector<std::string> &row) {
     if (row.size() != AKAS_ROW_LENGTH) {
         std::cerr << "Akas row must be length " << AKAS_ROW_LENGTH << std::endl;
         return true;
     }
     if (file.eof()) {
-        std::cerr << "Function get_akas_row reached the eof" << std::endl;
+        std::cerr << "Function getAkasRow reached the eof" << std::endl;
         return true;
     }
     std::string line, buf;
@@ -132,7 +132,7 @@ bool get_akas_row(std::ifstream &file, std::vector<std::string> &row) {
     return false;
 }
 
-bool check_name_fields(const std::vector<std::string> &buf) {
+bool checkNameFields(const std::vector<std::string> &buf) {
     std::vector<std::string> agent = {
             "nconst",
             "primaryName",
@@ -147,7 +147,7 @@ bool check_name_fields(const std::vector<std::string> &buf) {
     return false;
 }
 
-bool check_title_fields(const std::vector<std::string> &buf) {
+bool checkTitleFields(const std::vector<std::string> &buf) {
     std::vector<std::string> agent = {
             "tconst",
             "titleType",
@@ -165,7 +165,7 @@ bool check_title_fields(const std::vector<std::string> &buf) {
     return false;
 }
 
-bool check_akas_fields(const std::vector<std::string> &buf) {
+bool checkAkasFields(const std::vector<std::string> &buf) {
     std::vector<std::string> agent = {
             "titleId",
             "ordering",
@@ -182,23 +182,24 @@ bool check_akas_fields(const std::vector<std::string> &buf) {
     return false;
 }
 
-bool sort_names_tconst(const std::vector<std::string> &names, std::vector<std::string> &to) {
+bool sortNamesTconst(const std::vector<std::string> &names, std::vector<std::string> &to) {
     if (names.size() != NAME_ROW_LENGTH) {
         std::cerr << "Names row must be length " << NAME_ROW_LENGTH << std::endl;
         return true;
     }
 
     while (names[5].find("tt", to.size()*(TCONST_NUM_LENGTH+2)) != std::string::npos) {
-        to.push_back(names[5].substr(names[5].find("tt", to.size()*(TCONST_NUM_LENGTH+2)), TCONST_NUM_LENGTH+2));
+        to.push_back(names[5].substr(names[5].find("tt", to.size()*(TCONST_NUM_LENGTH+2)),
+                                     TCONST_NUM_LENGTH+2));
     }
     std::sort(to.begin(), to.end());
 
     return false;
 }
 
-bool find_director(std::ifstream &file, std::vector<std::string> &row, const std::string &dirs_name) {
+bool findDirector(std::ifstream &file, std::vector<std::string> &row, const std::string &dirs_name) {
     while (!file.eof()) {
-        if (get_name_row(file, row)) {
+        if (getNameRow(file, row)) {
             return true;
         }
         if (row[1] == dirs_name) {
@@ -213,10 +214,10 @@ bool find_director(std::ifstream &file, std::vector<std::string> &row, const std
     return true;
 }
 
-bool find_titles(std::ifstream &file, std::vector<std::string> &row, std::vector<std::string> &titles) {
+bool findTitles(std::ifstream &file, std::vector<std::string> &row, std::vector<std::string> &titles) {
     size_t count = 0;
     while (count < titles.size() && !file.eof()) {
-        get_title_row(file, row);
+        getTitleRow(file, row);
 
         // We suppose that file with titles sorted by ids and have given titles
         if (row[0] == titles[count]) {
@@ -233,14 +234,15 @@ bool find_titles(std::ifstream &file, std::vector<std::string> &row, std::vector
     return false;
 }
 
-std::vector<std::string> find_rus_titles(std::ifstream &file, std::vector<std::string> &row, const std::vector<std::string> &titles)  {
+std::vector<std::string> findRusTitles(std::ifstream &file, std::vector<std::string> &row,
+                                       const std::vector<std::string> &titles)  {
     std::vector<std::string> rus_titles;
     size_t count = 0;
     while (count < titles.size() && !file.eof()) {
-        get_akas_row(file, row);
+        getAkasRow(file, row);
         if (row[0] == titles[count]) {
             while (row[0] == titles[count] && !file.eof()) {
-                get_akas_row(file, row);
+                getAkasRow(file, row);
                 if (std::tolower(row[3][0]) == 'r' && std::tolower(row[3][1]) == 'u') {
                     rus_titles.push_back(row[2]);
                 }

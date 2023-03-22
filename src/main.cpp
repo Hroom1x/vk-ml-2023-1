@@ -19,38 +19,38 @@ int main(int argc, char *argv[]) {
     std::ifstream akas_file;
     std::string dirs_name;
 
-    if (arg_parse(argc, argv, dirs_file, titles_file, akas_file, dirs_name)) {
+    if (argParse(argc, argv, dirs_file, titles_file, akas_file, dirs_name)) {
         return EXIT_FAILURE;
     }
 
     std::vector<std::string> name_row(NAME_ROW_LENGTH);
     std::vector<std::string> title_row(TITLE_ROW_LENGTH);
     std::vector<std::string> akas_row(AKAS_ROW_LENGTH);
-    if (get_name_row(dirs_file, name_row) ||
-    get_title_row(titles_file, title_row) ||
-    get_akas_row(akas_file, akas_row)) {
+    if (getNameRow(dirs_file, name_row) ||
+        getTitleRow(titles_file, title_row) ||
+            getAkasRow(akas_file, akas_row)) {
         return EXIT_FAILURE;
     }
 
 
     // Checking format of first row in files
-    if (check_name_fields(name_row)) {
+    if (checkNameFields(name_row)) {
         std::cerr << "Invalid column titles in names file" << std::endl;
         return EXIT_FAILURE;
     }
-    if (check_title_fields(title_row)) {
+    if (checkTitleFields(title_row)) {
         std::cerr << "Invalid column titles in titles file" << std::endl;
         return EXIT_FAILURE;
     }
-    if (check_akas_fields(akas_row)) {
+    if (checkAkasFields(akas_row)) {
         std::cerr << "Invalid column titles in akas file" << std::endl;
         return EXIT_FAILURE;
     }
 
     // Searching for given director
     std::vector<std::string> titles;
-    if (!find_director(dirs_file, name_row, dirs_name)) {
-        sort_names_tconst(name_row, titles);
+    if (!findDirector(dirs_file, name_row, dirs_name)) {
+        sortNamesTconst(name_row, titles);
         dirs_file.close();
     } else {
         std::cerr << "Given director is not found" << std::endl;
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Searching for given titles and remove not suitable
-    if (!find_titles(titles_file, title_row, titles)) {
+    if (!findTitles(titles_file, title_row, titles)) {
         titles_file.close();
     } else {
         std::cerr << "Given titles are not found" << std::endl;
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Searching for russian titles
-    std::vector<std::string> rus_titles = find_rus_titles(akas_file, akas_row, titles);
+    std::vector<std::string> rus_titles = findRusTitles(akas_file, akas_row, titles);
     if (rus_titles.empty()) {
         std::cout << "Titles on russian not found" << std::endl;
     } else for (std::string &title : rus_titles) {
