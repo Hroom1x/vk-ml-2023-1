@@ -1,14 +1,15 @@
-#include <iostream>
-#include <vector>
 #include "utilities.hpp"
 
 
 int main(int argc, char *argv[]) {
-    // Argument parsing
+
     // -d /path/to/name.basics.tsv       path to file with directors names
     // -t /path/to/titles.basics.tsv     path to file with titles
     // -a /path/to/titles.akas.tsv       path to file with titles localization
     // -n "Directors name"               directors name to search films
+    // === Example ===
+    // -d /home/hrmx/Desktop/name.basics.tsv -t /home/hrmx/Desktop/title.basics.tsv -a /home/hrmx/Desktop/title.akas.tsv -n "Aleksey Balabanov"
+
     if (argc < ARG_NUMBER) {
         std::cerr << "Not enough arguments" << std::endl;
         return EXIT_FAILURE;
@@ -17,48 +18,20 @@ int main(int argc, char *argv[]) {
     std::ifstream titles_file;
     std::ifstream akas_file;
     std::string dirs_name;
-    for (int i = 1; i < argc;) {
-        if (argv[i][0] != '-') {
-            std::cerr << "Invalid argument" << std::endl;
-            return EXIT_FAILURE;
-        }
 
-        if (argv[i][1] == 'd') {
-            dirs_file.open(argv[i + 1], std::ios::in);
-            if (!dirs_file.is_open()) {
-                std::cerr << "Invalid path to directors names" << std::endl;
-                return EXIT_FAILURE;
-            }
-            i += 2;
-        } else if (argv[i][1] == 't') {
-            titles_file.open(argv[i+1], std::ios::in);
-            if (!titles_file.is_open()) {
-                std::cerr << "Invalid path to titles" << std::endl;
-                return EXIT_FAILURE;
-            }
-            i += 2;
-        } else if (argv[i][1] == 'a') {
-            akas_file.open(argv[i+1], std::ios::in);
-            if (!akas_file.is_open()) {
-                std::cerr << "Invalid path to akas" << std::endl;
-                return EXIT_FAILURE;
-            }
-            i += 2;
-        } else if (argv[i][1] == 'n') {
-            dirs_name = argv[i+1];
-            i += 2;
-        } else {
-            std::cerr << "Unknown flag" << std::endl;
-            return EXIT_FAILURE;
-        }
+    if (arg_parse(argc, argv, dirs_file, titles_file, akas_file, dirs_name)) {
+        return EXIT_FAILURE;
     }
 
     std::vector<std::string> name_row(NAME_ROW_LENGTH);
     std::vector<std::string> title_row(TITLE_ROW_LENGTH);
     std::vector<std::string> akas_row(AKAS_ROW_LENGTH);
-    get_name_row(dirs_file, name_row);
-    get_title_row(titles_file, title_row);
-    get_akas_row(akas_file, akas_row);
+    if (get_name_row(dirs_file, name_row) ||
+    get_title_row(titles_file, title_row) ||
+    get_akas_row(akas_file, akas_row)) {
+        return EXIT_FAILURE;
+    }
+
 
     // Checking format of first row in files
     if (check_name_fields(name_row)) {

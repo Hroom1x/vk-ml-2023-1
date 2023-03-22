@@ -1,7 +1,46 @@
-#include <iostream>
-
 #include "utilities.hpp"
 
+
+bool arg_parse(int argc, char *argv[], std::ifstream &dirs_file, std::ifstream &titles_file, std::ifstream &akas_file,
+               std::string &dirs_name) {
+    if (argc < ARG_NUMBER) {
+        std::cerr << "Not enough arguments" << std::endl;
+        return true;
+    }
+    if (argc > ARG_NUMBER) {
+        std::cerr << "Too many arguments" << std::endl;
+        return true;
+    }
+
+    for (int i = 1; i < argc; ++i) {
+        if (std::string(argv[i]) == "-d") {
+            dirs_file.open(argv[++i], std::ios::in);
+            if (!dirs_file.is_open()) {
+                std::cerr << "Invalid path to directors names" << std::endl;
+                return true;
+            }
+        } else if (std::string(argv[i]) == "-t") {
+            titles_file.open(argv[++i], std::ios::in);
+            if (!titles_file.is_open()) {
+                std::cerr << "Invalid path to titles" << std::endl;
+                return true;
+            }
+        } else if (std::string(argv[i]) == "-a") {
+            akas_file.open(argv[++i], std::ios::in);
+            if (!akas_file.is_open()) {
+                std::cerr << "Invalid path to akas" << std::endl;
+                return true;
+            }
+        } else if (std::string(argv[i]) == "-n") {
+            dirs_name = argv[++i];
+        } else {
+            std::cerr << "Unknown flag" << std::endl;
+            return true;
+        }
+    }
+
+    return false;
+}
 
 bool get_name_row(std::ifstream &file, std::vector<std::string> &row) {
     if (row.size() != NAME_ROW_LENGTH) {

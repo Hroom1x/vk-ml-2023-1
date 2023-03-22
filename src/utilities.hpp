@@ -3,13 +3,17 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 const int NAME_ROW_LENGTH = 6;
 const int TITLE_ROW_LENGTH = 9;
 const int AKAS_ROW_LENGTH = 8;
-const int ARG_NUMBER = 7;
+const int ARG_NUMBER = 9;
 const int TCONST_NUM_LENGTH = 7;
 
+
+bool arg_parse(int argc, char *argv[], std::ifstream &dirs_file, std::ifstream &titles_file, std::ifstream &akas_file,
+               std::string &dirs_name);
 
 bool get_name_row(std::ifstream &file, std::vector<std::string> &row);
 
