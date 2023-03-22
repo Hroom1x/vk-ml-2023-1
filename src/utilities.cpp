@@ -18,7 +18,7 @@ bool get_name_row(std::ifstream &file, std::vector<std::string> &row) {
     for (char i : line) {
         if (i != '\t') {
             buf += i;
-        } else if (count < int(row.size())) {
+        } else if (count < row.size()) {
             row[count++] = buf;
             buf.clear();
         }
@@ -26,7 +26,7 @@ bool get_name_row(std::ifstream &file, std::vector<std::string> &row) {
     if (!buf.empty()) {
         row[count++] = buf;
     }
-    if (count != int(row.size())) {
+    if (count != row.size()) {
         std::cerr << "Invalid name row" << std::endl;
         return true;
     }
@@ -48,7 +48,7 @@ bool get_title_row(std::ifstream &file, std::vector<std::string> &row) {
     for (char i : line) {
         if (i != '\t') {
             buf += i;
-        } else if (count < int(row.size())) {
+        } else if (count < row.size()) {
             row[count++] = buf;
             buf.clear();
         }
@@ -56,7 +56,7 @@ bool get_title_row(std::ifstream &file, std::vector<std::string> &row) {
     if (!buf.empty()) {
         row[count++] = buf;
     }
-    if (count != int(row.size())) {
+    if (count != row.size()) {
         std::cerr << "Invalid titles row" << std::endl;
         return true;
     }
@@ -78,7 +78,7 @@ bool get_akas_row(std::ifstream &file, std::vector<std::string> &row) {
     for (char i : line) {
         if (i != '\t') {
             buf += i;
-        } else if (count < int(row.size())) {
+        } else if (count < row.size()) {
             row[count++] = buf;
             buf.clear();
         }
@@ -86,7 +86,7 @@ bool get_akas_row(std::ifstream &file, std::vector<std::string> &row) {
     if (!buf.empty()) {
         row[count++] = buf;
     }
-    if (count != int(row.size())) {
+    if (count != row.size()) {
         std::cerr << "Invalid akas row" << std::endl;
         return true;
     }
@@ -176,13 +176,13 @@ bool find_director(std::ifstream &file, std::vector<std::string> &row, const std
 
 bool find_titles(std::ifstream &file, std::vector<std::string> &row, std::vector<std::string> &titles) {
     size_t count = 0;
-    while (count<int(titles.size()) && !file.eof()) {
+    while (count < titles.size() && !file.eof()) {
         get_title_row(file, row);
 
         // We suppose that file with titles sorted by ids and have given titles
         if (row[0] == titles[count]) {
             if (row[4] != "0" || row[1] != "movie") {
-                titles.erase(titles.begin()+count);
+                titles.erase(titles.begin() + count);
                 count--;
             }
             count++;
@@ -197,7 +197,7 @@ bool find_titles(std::ifstream &file, std::vector<std::string> &row, std::vector
 std::vector<std::string> find_rus_titles(std::ifstream &file, std::vector<std::string> &row, const std::vector<std::string> &titles)  {
     std::vector<std::string> rus_titles;
     size_t count = 0;
-    while (count<int(titles.size()) && !file.eof()) {
+    while (count < titles.size() && !file.eof()) {
         get_akas_row(file, row);
         if (row[0] == titles[count]) {
             while (row[0] == titles[count] && !file.eof()) {
