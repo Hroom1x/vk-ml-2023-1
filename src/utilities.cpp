@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 
 #include "utilities.hpp"
 
@@ -15,7 +14,7 @@ bool get_name_row(std::ifstream &file, std::vector<std::string> &row) {
     }
     std::string line, buf;
     getline(file, line);
-    int count = 0;
+    size_t count = 0;
     for (char i : line) {
         if (i != '\t') {
             buf += i;
@@ -45,7 +44,7 @@ bool get_title_row(std::ifstream &file, std::vector<std::string> &row) {
     }
     std::string line, buf;
     getline(file, line);
-    int count = 0;
+    size_t count = 0;
     for (char i : line) {
         if (i != '\t') {
             buf += i;
@@ -75,7 +74,7 @@ bool get_akas_row(std::ifstream &file, std::vector<std::string> &row) {
     }
     std::string line, buf;
     getline(file, line);
-    int count = 0;
+    size_t count = 0;
     for (char i : line) {
         if (i != '\t') {
             buf += i;
@@ -153,7 +152,7 @@ bool sort_names_tconst(const std::vector<std::string> &names, std::vector<std::s
     while (names[5].find("tt", to.size()*(TCONST_NUM_LENGTH+2)) != std::string::npos) {
         to.push_back(names[5].substr(names[5].find("tt", to.size()*(TCONST_NUM_LENGTH+2)), TCONST_NUM_LENGTH+2));
     }
-    sort(to.begin(), to.end());
+    std::sort(to.begin(), to.end());
 
     return false;
 }
@@ -176,7 +175,7 @@ bool find_director(std::ifstream &file, std::vector<std::string> &row, const std
 }
 
 bool find_titles(std::ifstream &file, std::vector<std::string> &row, std::vector<std::string> &titles) {
-    int count = 0;
+    size_t count = 0;
     while (count<int(titles.size()) && !file.eof()) {
         get_title_row(file, row);
 
@@ -197,19 +196,17 @@ bool find_titles(std::ifstream &file, std::vector<std::string> &row, std::vector
 
 std::vector<std::string> find_rus_titles(std::ifstream &file, std::vector<std::string> &row, const std::vector<std::string> &titles)  {
     std::vector<std::string> rus_titles;
-    int count = 0;
+    size_t count = 0;
     while (count<int(titles.size()) && !file.eof()) {
         get_akas_row(file, row);
         if (row[0] == titles[count]) {
             while (row[0] == titles[count] && !file.eof()) {
                 get_akas_row(file, row);
-                /*std::transform(row[3].begin(), row[3].end(), row[3].begin(),
-                               [](unsigned char c){ return std::tolower(c); });*/
                 if (std::tolower(row[3][0]) == 'r' && std::tolower(row[3][1]) == 'u') {
                     rus_titles.push_back(row[2]);
                 }
             }
-            count++;
+            ++count;
         }
     }
     return rus_titles;

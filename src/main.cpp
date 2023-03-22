@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     std::ifstream titles_file;
     std::ifstream akas_file;
     std::string dirs_name;
-    for (int i=1; i<argc;) {
+    for (size_t i=1; i<argc;) {
         if (argv[i][0] != '-') {
             std::cerr << "Invalid argument" << std::endl;
             return EXIT_FAILURE;
