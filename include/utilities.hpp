@@ -12,7 +12,29 @@ const int ARG_NUMBER = 9;
 const int TCONST_NUM_LENGTH = 7;
 
 
-bool argParse(int argc, char *argv[], std::ifstream &dirs_file, std::ifstream &titles_file, std::ifstream &akas_file,
+class FileHandler {
+public:
+    FileHandler() : file() {}
+
+    bool open(const std::string& filename) {
+        if (!file.is_open()) {
+            std::cerr << "Failed to open file: " << filename << std::endl;
+            return true;
+        }
+        return false;
+    }
+
+    ~FileHandler() {
+        if (file.is_open()) {
+            file.close();
+        }
+    }
+
+private:
+    std::ifstream file;
+};
+
+bool argParse(int argc, char *argv[], FileHandler &dirs_file, FileHandler &titles_file, FileHandler &akas_file,
               std::string &dirs_name);
 
 bool getNameRow(std::ifstream &file, std::vector<std::string> &row);

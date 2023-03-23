@@ -1,7 +1,7 @@
 #include "../include/utilities.hpp"
 
 
-bool argParse(int argc, char *argv[], std::ifstream &dirs_file, std::ifstream &titles_file, std::ifstream &akas_file,
+bool argParse(int argc, char *argv[], FileHandler &dirs_file, FileHandler &titles_file, FileHandler &akas_file,
               std::string &dirs_name) {
     if (argc < ARG_NUMBER) {
         std::cerr << "Not enough arguments" << std::endl;
@@ -14,21 +14,15 @@ bool argParse(int argc, char *argv[], std::ifstream &dirs_file, std::ifstream &t
 
     for (int i = 1; i < argc; ++i) {
         if (std::string(argv[i]) == "-d") {
-            dirs_file.open(argv[++i], std::ios::in);
-            if (!dirs_file.is_open()) {
-                std::cerr << "Invalid path to directors names" << std::endl;
+            if (dirs_file.open(argv[++i])) {
                 return true;
             }
         } else if (std::string(argv[i]) == "-t") {
-            titles_file.open(argv[++i], std::ios::in);
-            if (!titles_file.is_open()) {
-                std::cerr << "Invalid path to titles" << std::endl;
+            if (titles_file.open(argv[++i])) {
                 return true;
             }
         } else if (std::string(argv[i]) == "-a") {
-            akas_file.open(argv[++i], std::ios::in);
-            if (!akas_file.is_open()) {
-                std::cerr << "Invalid path to akas" << std::endl;
+            if (akas_file.open(argv[++i])) {
                 return true;
             }
         } else if (std::string(argv[i]) == "-n") {

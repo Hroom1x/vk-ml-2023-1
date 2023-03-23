@@ -14,6 +14,9 @@ int main(int argc, char *argv[]) {
         std::cerr << "Not enough arguments" << std::endl;
         return EXIT_FAILURE;
     }
+    /*FileHandler dirs_file;
+    FileHandler titles_file;
+    FileHandler akas_file;*/
     std::ifstream dirs_file;
     std::ifstream titles_file;
     std::ifstream akas_file;
@@ -65,7 +68,6 @@ int main(int argc, char *argv[]) {
         titles_file.close();
     } else {
         std::cerr << "Given titles are not found" << std::endl;
-        dirs_file.close();
         titles_file.close();
         akas_file.close();
         return EXIT_FAILURE;
@@ -79,8 +81,6 @@ int main(int argc, char *argv[]) {
         std::cout << title << std::endl;
     }
 
-    dirs_file.close();
-    titles_file.close();
     akas_file.close();
     return EXIT_SUCCESS;
 }
