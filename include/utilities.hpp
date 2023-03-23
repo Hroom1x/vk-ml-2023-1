@@ -17,6 +17,7 @@ public:
     FileHandler() : file() {}
 
     bool open(const std::string& filename) {
+        file.open(filename);
         if (!file.is_open()) {
             std::cerr << "Failed to open file: " << filename << std::endl;
             return true;
@@ -30,7 +31,6 @@ public:
         }
     }
 
-private:
     std::ifstream file;
 };
 
