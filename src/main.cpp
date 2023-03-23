@@ -10,17 +10,13 @@ int main(int argc, char *argv[]) {
     // === Example ===
     // -d /home/hrmx/Desktop/name.basics.tsv -t /home/hrmx/Desktop/title.basics.tsv -a /home/hrmx/Desktop/title.akas.tsv -n "Aleksey Balabanov"
 
-    if (argc < ARG_NUMBER) {
-        std::cerr << "Not enough arguments" << std::endl;
-        return EXIT_FAILURE;
-    }
     FileHandler dirs_file;
     FileHandler titles_file;
     FileHandler akas_file;
     std::string dirs_name;
 
     if (argParse(argc, argv, dirs_file, titles_file, akas_file, dirs_name)) {
-        return EXIT_FAILURE;
+        return ERR_ARGS_PARSING;
     }
 
     std::vector<std::string> name_row(NAME_ROW_LENGTH);
@@ -29,22 +25,22 @@ int main(int argc, char *argv[]) {
     if (getNameRow(dirs_file.file, name_row) ||
         getTitleRow(titles_file.file, title_row) ||
             getAkasRow(akas_file.file, akas_row)) {
-        return EXIT_FAILURE;
+        return ERR_INVALID_ROW;
     }
 
 
     // Checking format of first row in files
     if (checkNameFields(name_row)) {
         std::cerr << "Invalid column titles in names file" << std::endl;
-        return EXIT_FAILURE;
+        return ERR_INVALID_FIRST_ROW;
     }
     if (checkTitleFields(title_row)) {
         std::cerr << "Invalid column titles in titles file" << std::endl;
-        return EXIT_FAILURE;
+        return ERR_INVALID_FIRST_ROW;
     }
     if (checkAkasFields(akas_row)) {
         std::cerr << "Invalid column titles in akas file" << std::endl;
-        return EXIT_FAILURE;
+        return ERR_INVALID_FIRST_ROW;
     }
 
     // Searching for given director
@@ -53,13 +49,13 @@ int main(int argc, char *argv[]) {
         sortNamesTconst(name_row, titles);
     } else {
         std::cerr << "Given director is not found" << std::endl;
-        return EXIT_FAILURE;
+        return ERR_NOT_FOUND;
     }
 
     // Searching for given titles and remove not suitable
     if (findTitles(titles_file.file, title_row, titles)) {
         std::cerr << "Given titles are not found" << std::endl;
-        return EXIT_FAILURE;
+        return ERR_NOT_FOUND;
     }
 
     // Searching for russian titles

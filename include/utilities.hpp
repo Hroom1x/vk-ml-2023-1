@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <iostream>
 
+#include "error_codes.hpp"
+
 const int NAME_ROW_LENGTH = 6;
 const int TITLE_ROW_LENGTH = 9;
 const int AKAS_ROW_LENGTH = 8;
