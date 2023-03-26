@@ -1,4 +1,4 @@
-#include "../include/utilities.hpp"
+#include "utilities.hpp"
 
 
 bool argParse(int argc, char *argv[], FileHandler &dirs_file, FileHandler &titles_file, FileHandler &akas_file,
@@ -47,7 +47,7 @@ bool getNameRow(std::ifstream &file, std::vector<std::string> &row) {
     }
     std::string line, buf;
     getline(file, line);
-    size_t count = 0;
+    std::size_t count = 0;
     for (char i : line) {
         if (i != '\t') {
             buf += i;
@@ -77,7 +77,7 @@ bool getTitleRow(std::ifstream &file, std::vector<std::string> &row) {
     }
     std::string line, buf;
     getline(file, line);
-    size_t count = 0;
+    std::size_t count = 0;
     for (char i : line) {
         if (i != '\t') {
             buf += i;
@@ -107,7 +107,7 @@ bool getAkasRow(std::ifstream &file, std::vector<std::string> &row) {
     }
     std::string line, buf;
     getline(file, line);
-    size_t count = 0;
+    std::size_t count = 0;
     for (char i : line) {
         if (i != '\t') {
             buf += i;
@@ -209,7 +209,7 @@ bool findDirector(std::ifstream &file, std::vector<std::string> &row, const std:
 }
 
 bool findTitles(std::ifstream &file, std::vector<std::string> &row, std::vector<std::string> &titles) {
-    size_t count = 0;
+    std::size_t count = 0;
     while (count < titles.size() && !file.eof()) {
         getTitleRow(file, row);
 
@@ -231,7 +231,7 @@ bool findTitles(std::ifstream &file, std::vector<std::string> &row, std::vector<
 std::vector<std::string> findRusTitles(std::ifstream &file, std::vector<std::string> &row,
                                        const std::vector<std::string> &titles)  {
     std::vector<std::string> rus_titles;
-    size_t count = 0;
+    std::size_t count = 0;
     while (count < titles.size() && !file.eof()) {
         getAkasRow(file, row);
         if (row[0] == titles[count]) {

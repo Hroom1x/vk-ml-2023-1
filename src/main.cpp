@@ -1,4 +1,4 @@
-#include "../include/utilities.hpp"
+#include "utilities.hpp"
 
 
 int main(int argc, char *argv[]) {
