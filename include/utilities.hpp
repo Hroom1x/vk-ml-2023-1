@@ -16,11 +16,11 @@ const int TCONST_NUM_LENGTH = 7;
 
 class FileHandler {
 public:
-    FileHandler() : file() {}
+    FileHandler() : _file() {}
 
     bool open(const std::string& filename) {
-        file.open(filename);
-        if (!file.is_open()) {
+        _file.open(filename);
+        if (!_file.is_open()) {
             std::cerr << "Failed to open file: " << filename << std::endl;
             return true;
         }
@@ -28,12 +28,12 @@ public:
     }
 
     ~FileHandler() {
-        if (file.is_open()) {
-            file.close();
+        if (_file.is_open()) {
+            _file.close();
         }
     }
 
-    std::ifstream file;
+    std::ifstream _file;
 };
 
 bool argParse(int argc, char *argv[], FileHandler &dirs_file, FileHandler &titles_file, FileHandler &akas_file,
