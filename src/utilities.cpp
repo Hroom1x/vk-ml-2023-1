@@ -46,7 +46,7 @@ bool getNameRow(std::ifstream &file, std::vector<std::string> &row) {
         return true;
     }
     std::string line, buf;
-    getline(file, line);
+    std::getline(file, line);
     std::size_t count = 0;
     for (char i : line) {
         if (i != '\t') {
@@ -76,7 +76,7 @@ bool getTitleRow(std::ifstream &file, std::vector<std::string> &row) {
         return true;
     }
     std::string line, buf;
-    getline(file, line);
+    std::getline(file, line);
     std::size_t count = 0;
     for (char i : line) {
         if (i != '\t') {
@@ -106,7 +106,7 @@ bool getAkasRow(std::ifstream &file, std::vector<std::string> &row) {
         return true;
     }
     std::string line, buf;
-    getline(file, line);
+    std::getline(file, line);
     std::size_t count = 0;
     for (char i : line) {
         if (i != '\t') {
