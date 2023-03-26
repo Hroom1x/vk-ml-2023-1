@@ -1,9 +1,9 @@
 #pragma once
 
-#include <fstream>
-#include <vector>
 #include <algorithm>
+#include <fstream>
 #include <iostream>
+#include <vector>
 
 #include "error_codes.hpp"
 
