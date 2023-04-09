@@ -28,7 +28,15 @@ int parseString(std::string& str, std::vector<std::string>& commands, std::vecto
             i++;
         }
         if (!current_argument.empty()) {
-            if (current_command == "echo" || current_command == "cat" || current_command == "nl") {
+            if (current_command == "echo") {
+                commands.push_back(current_command);
+                arguments.push_back(current_argument);
+            } else if (current_command == "cat" || current_command == "nl") {
+                std::ifstream temp(current_argument);
+                if (!temp.is_open()) {
+                    std::cerr << "No such file";
+                    return ENOENT;
+                }
                 commands.push_back(current_command);
                 arguments.push_back(current_argument);
             } else {
