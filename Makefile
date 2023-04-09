@@ -1,15 +1,11 @@
 TARGET = ./main.out
 VALGRIND_LOG = "valgrind.log"
-ARGS = \
-		-d /home/hrmx/Desktop/name.basics.tsv \
-		-t /home/hrmx/Desktop/title.basics.tsv \
-		-a /home/hrmx/Desktop/title.akas.tsv \
-		-n "Aleksey Balabanov"
+ARGS = 'echo 123 | echo 321'
 
 SRCS = \
 		vk-ml-2023-1/src/main.cpp \
-		vk-ml-2023-1/src/utilities.cpp \
-		vk-ml-2023-1/src/utilities.hpp
+		vk-ml-2023-1/src/ioperation.cpp \
+		vk-ml-2023-1/src/ioperation.hpp
 
 .PHONY: all build memtest rebuild clean
 
