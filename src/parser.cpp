@@ -35,20 +35,6 @@ int parseString(std::string& str, std::vector<std::string>& commands, std::vecto
                 std::cerr << "Unknown command";
                 return EINVAL;
             }
-            /*if (current_command == "echo") {
-                *//*auto operation_ptr = std::make_unique<Echo>();
-                operation_ptr->ProcessLine(current_argument);
-                prev_operation->SetNextOperation(std::move(operation_ptr));*//*
-            } else if (current_command == "cat") {
-                *//*auto operation_ptr = std::make_unique<Cat>();
-                operation_ptr->ProcessLine(current_argument);*//*
-            } else if (current_command == "nl") {
-                *//*auto operation_ptr = std::make_unique<Nl>();
-                operation_ptr->ProcessLine(current_argument);*//*
-            } else {
-                std::cerr << "Unknown command";
-                return EINVAL;
-            }*/
         } else {
             std::cerr << "Invalid argument";
             return EINVAL;
