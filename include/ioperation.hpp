@@ -3,9 +3,12 @@
 #include <cerrno>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <vector>
 
+
+const std::size_t MAX_LINE_SIZE = 65536;
 
 struct File {
 public:
@@ -54,12 +57,13 @@ private:
 
 class Nl : public IOperation {
 public:
-    Nl() : _argument(std::string("")) { };
+    Nl() = default;
 
     void ProcessLine(const std::string& str) override;
     void HandleEndOfInput() override;
     void SetNextOperation(std::shared_ptr<IOperation>& next_operation) override;
 private:
+    File _file;
     std::string _argument;
     std::shared_ptr<IOperation> _next_operation;
 };

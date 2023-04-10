@@ -33,9 +33,12 @@ int parseString(std::string& str, std::vector<std::string>& commands, std::vecto
                 arguments.push_back(current_argument);
             } else if (current_command == "cat" || current_command == "nl") {
                 std::ifstream temp(current_argument);
+                // Checking file existence
                 if (!temp.is_open()) {
                     std::cerr << "No such file";
                     return ENOENT;
+                } else {
+                    temp.close();
                 }
                 commands.push_back(current_command);
                 arguments.push_back(current_argument);

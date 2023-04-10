@@ -12,7 +12,8 @@ void Echo::HandleEndOfInput() {
 }
 
 void Echo::SetNextOperation(std::shared_ptr<IOperation>& next_operation) {
-    _next_operation = next_operation;
+    if (next_operation)
+        _next_operation = next_operation;
 }
 
 void Cat::ProcessLine(const std::string &str) {
@@ -30,21 +31,31 @@ void Cat::HandleEndOfInput() {
 }
 
 void Cat::SetNextOperation(std::shared_ptr<IOperation>& next_operation) {
-    _next_operation = next_operation;
+    if (next_operation)
+        _next_operation = next_operation;
 }
 
 void Nl::ProcessLine(const std::string &str) {
     _argument = str;
+    _file.open(_argument);
 }
 
 void Nl::HandleEndOfInput() {
-    std::cout << _argument << std::endl;
+    if (_file._file.is_open()) {
+        std::size_t counter = 0;
+        char buf[MAX_LINE_SIZE];
+        while (!_file._file.eof()) {
+            _file._file.getline(buf, MAX_LINE_SIZE, '\n');
+            std::cout << ++counter << " " << buf << std::endl;
+        }
+    }
     if (_next_operation)
         _next_operation->HandleEndOfInput();
 }
 
 void Nl::SetNextOperation(std::shared_ptr<IOperation>& next_operation) {
-    _next_operation = next_operation;
+    if (next_operation)
+        _next_operation = next_operation;
 }
 
 std::shared_ptr<IOperation> createChild(const std::string &type) {
