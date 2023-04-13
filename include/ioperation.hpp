@@ -3,12 +3,10 @@
 #include <cerrno>
 #include <fstream>
 #include <iostream>
-#include <limits>
+#include <climits>
 #include <memory>
 #include <vector>
 
-
-const std::size_t MAX_LINE_SIZE = 65536;
 
 struct File {
 public:

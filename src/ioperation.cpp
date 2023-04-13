@@ -43,9 +43,9 @@ void Nl::ProcessLine(const std::string &str) {
 void Nl::HandleEndOfInput() {
     if (_file._file.is_open()) {
         std::size_t counter = 0;
-        char buf[MAX_LINE_SIZE];
+        char buf[UINT_MAX];
         while (!_file._file.eof()) {
-            _file._file.getline(buf, MAX_LINE_SIZE, '\n');
+            _file._file.getline(buf, UINT_MAX, '\n');
             std::cout << ++counter << " " << buf << std::endl;
         }
     }
